@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI RiskGuard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .header {
+            background: #111827;
+            color: white;
+            padding: 24px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 6px 0 0;
+            color: #cbd5e1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 14px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .score {
+            text-align: center;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #dc2626;
+        }
+
+        .risk-high {
+            color: #dc2626;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .probability {
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        .evidence {
+            margin-top: 20px;
+        }
+
+        .evidence li {
+            margin-bottom: 10px;
+        }
+
+        .action {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #fee2e2;
+            color: #991b1b;
+            font-weight: bold;
+        }
+
+        .summary {
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 800px) {
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <h1>AI RiskGuard</h1>
+
+        <p>
+            Intelligent Transaction Risk Management & Investigation
+        </p>
+
+    </div>
+
+
+    <div class="container">
+
+
+        <div class="grid">
+
+
+            <!-- ===================================== -->
+            <!-- TRANSACTION INPUT -->
+            <!-- ===================================== -->
+
+            <div class="card">
+
+                <h2>Transaction Assessment</h2>
+
+
+                <form method="POST">
+
+
+                    <!-- Transaction Amount -->
+
+                    <label>
+                        Transaction Amount
+                    </label>
+
+                    <input type="number" name="amount" min="0" step="0.01" required>
+
+
+                    <!-- Transaction Hour -->
+
+                    <label>
+                        Transaction Hour
+                    </label>
+
+                    <input type="number" name="transaction_hour" min="0" max="23" placeholder="0 - 23" required>
+
+
+                    <!-- Location Change -->
+
+                    <label>
+                        Location Change
+                    </label>
+
+                    <select name="location_change" required>
+
+                        <option value="" selected disabled>
+                            Select option
+                        </option>
+
+                        <option value="0">
+                            No
+                        </option>
+
+                        <option value="1">
+                            Yes
+                        </option>
+
+                    </select>
+
+
+                    <!-- Device Change -->
+
+                    <label>
+                        Device Change
+                    </label>
+
+                    <select name="device_change" required>
+
+                        <option value="" selected disabled>
+                            Select option
+                        </option>
+
+                        <option value="0">
+                            No
+                        </option>
+
+                        <option value="1">
+                            Yes
+                        </option>
+
+                    </select>
+
+
+                    <!-- Transaction Frequency -->
+
+                    <label>
+                        Transaction Frequency
+                    </label>
+
+                    <input type="number" name="transaction_frequency" min="0"
+                        placeholder="Number of recent transactions" required>
+
+
+                    <!-- Average Customer Amount -->
+
+                    <label>
+                        Average Customer Amount
+                    </label>
+
+                    <input type="number" name="average_customer_amount" min="0.01" step="0.01" required>
+
+
+                    <!-- Merchant Category -->
+
+                    <label>
+                        Merchant Category
+                    </label>
+
+                    <select name="merchant_category" id="merchant_category" required onchange="showOtherCategory()">
+
+                        <option value="" selected disabled>
+                            Select category
+                        </option>
+
+                        <option value="electronics">
+                            Electronics
+                        </option>
+
+                        <option value="grocery">
+                            Grocery
+                        </option>
+
+                        <option value="travel">
+                            Travel
+                        </option>
+
+                        <option value="restaurant">
+                            Restaurant
+                        </option>
+
+                        <option value="other">
+                            Other
+                        </option>
+
+                    </select>
+
+
+                    <!-- Other Category -->
+
+                    <div id="other_category_container" style="display: none;">
+
+                        <label>
+                            Enter Merchant Category
+                        </label>
+
+                        <input type="text" id="other_category" name="other_category"
+                            placeholder="e.g. Pharmacy, Fuel, Clothing">
+
+                    </div>
+
+
+                    <!-- Previous Risk Events -->
+
+                    <label>
+                        Previous Risk Events
+                    </label>
+
+                    <input type="number" name="previous_risk_events" min="0"
+                        placeholder="Number of previous risk events" required>
+
+
+                    <!-- Submit -->
+
+                    <button type="submit">
+                        Analyze Transaction
+                    </button>
+
+
+                </form>
+
+            </div>
+
+
+            <!-- ===================================== -->
+            <!-- RISK ASSESSMENT -->
+            <!-- ===================================== -->
+
+            <div class="card">
+
+                <h2>
+                    Risk Assessment
+                </h2>
+
+
+                {% if result %}
+
+
+                <!-- Risk Score -->
+
+                <div class="score">
+
+                    <div class="score-number">
+
+                        {{ result.risk_score }}
+
+                    </div>
+
+
+                    <div>
+                        Risk Score / 100
+                    </div>
+
+
+                    <div class="risk-high">
+
+                        {{ result.risk_level }}
+
+                    </div>
+
+
+                    <div class="probability">
+
+                        ML Fraud Probability:
+
+                        <strong>
+
+                            {{ result.fraud_probability }}%
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Investigation Summary -->
+
+                <h3>
+                    AI Investigation Summary
+                </h3>
+
+
+                <div class="summary">
+
+                    {{ result.summary }}
+
+                </div>
+
+
+                <!-- Evidence -->
+
+                <h3>
+                    Evidence
+                </h3>
+
+
+                <div class="evidence">
+
+                    <ul>
+
+                        {% for item in result.evidence %}
+
+                        <li>
+                            {{ item }}
+                        </li>
+
+                        {% else %}
+
+                        <li>
+                            No significant risk indicators detected.
+                        </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Recommended Action -->
+
+                <div class="action">
+
+                    Recommended Action:
+
+                    {{ result.recommended_action }}
+
+                </div>
+
+
+                {% else %}
+
+
+                <p>
+
+                    Enter transaction details and click
+
+                    <strong>
+                        Analyze Transaction
+                    </strong>
+
+                    to generate a RiskGuard assessment.
+
+                </p>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================== -->
+    <!-- JAVASCRIPT -->
+    <!-- ===================================== -->
+
+    <script>
+
+        function showOtherCategory() {
+
+            const category =
+                document.getElementById(
+                    "merchant_category"
+                ).value;
+
+
+            const container =
+                document.getElementById(
+                    "other_category_container"
+                );
+
+
+            const otherInput =
+                document.getElementById(
+                    "other_category"
+                );
+
+
+            if (category === "other") {
+
+                container.style.display = "block";
+
+                otherInput.required = true;
+
+            }
+
+            else {
+
+                container.style.display = "none";
+
+                otherInput.required = false;
+
+                otherInput.value = "";
+
+            }
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
