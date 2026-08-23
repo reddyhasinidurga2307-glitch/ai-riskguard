@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI RiskGuard - Monitoring</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        /* ---------------- HEADER ---------------- */
+
+        .header {
+            background: #111827;
+            color: white;
+            padding: 28px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 7px 0 0;
+            color: #cbd5e1;
+        }
+
+
+        /* ---------------- CONTAINER ---------------- */
+
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+
+        /* ---------------- SUMMARY CARDS ---------------- */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .summary-card h3 {
+            margin: 0;
+
+            font-size: 15px;
+
+            color: #64748b;
+        }
+
+        .summary-number {
+            margin-top: 10px;
+
+            font-size: 30px;
+
+            font-weight: bold;
+        }
+
+
+        /* ---------------- RISK COLORS ---------------- */
+
+        .low {
+            color: #15803d;
+
+            font-weight: bold;
+        }
+
+        .medium {
+            color: #ca8a04;
+
+            font-weight: bold;
+        }
+
+        .high {
+            color: #dc2626;
+
+            font-weight: bold;
+        }
+
+
+        /* ---------------- CARD ---------------- */
+
+        .card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 24px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+
+        /* ---------------- BUTTON ---------------- */
+
+        .refresh {
+            display: inline-block;
+
+            margin-top: 10px;
+
+            padding: 11px 20px;
+
+            background: #2563eb;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 7px;
+        }
+
+        .refresh:hover {
+            background: #1d4ed8;
+        }
+
+
+        /* ---------------- TABLE ---------------- */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px;
+
+            text-align: left;
+
+            border-bottom:
+                1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f8fafc;
+
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+
+        /* ---------------- RISK BADGES ---------------- */
+
+        .badge {
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+        .badge-low {
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        .badge-medium {
+            background: #fef3c7;
+
+            color: #92400e;
+        }
+
+        .badge-high {
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+
+        /* ---------------- HIGH RISK SECTION ---------------- */
+
+        .warning {
+            border-left:
+                5px solid #dc2626;
+        }
+
+
+        /* ---------------- RESPONSIVE ---------------- */
+
+        @media (max-width: 900px) {
+
+            .summary-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 22px;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
+
+    <div class="header">
+
+        <h1>
+            AI RiskGuard
+        </h1>
+
+        <p>
+            Automatic Transaction Risk Monitoring
+        </p>
+
+    </div>
+
+
+    <div class="container">
+
+
+        <!-- ================================================= -->
+        <!-- SUMMARY -->
+        <!-- ================================================= -->
+
+        <div class="summary-grid">
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Transactions
+                </h3>
+
+                <div class="summary-number">
+
+                    {{ summary.total_transactions }}
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Low Risk
+                </h3>
+
+                <div class="summary-number low">
+
+                    {{ summary.low_risk }}
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Medium Risk
+                </h3>
+
+                <div class="summary-number medium">
+
+                    {{ summary.medium_risk }}
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    High Risk
+                </h3>
+
+                <div class="summary-number high">
+
+                    {{ summary.high_risk }}
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Fraud Probability ≥ 50%
+                </h3>
+
+                <div class="summary-number">
+
+                    {{ summary.fraud_detected }}
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <h3>
+                    Escalations
+                </h3>
+
+                <div class="summary-number high">
+
+                    {{ summary.escalation_count }}
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- MONITORING INFORMATION -->
+        <!-- ================================================= -->
+
+        <div class="card">
+
+            <h2>
+                Automatic Transaction Monitoring
+            </h2>
+
+            <p>
+                RiskGuard analyzed transactions automatically
+                using the machine learning model, risk engine,
+                evidence generator, and investigation agent.
+            </p>
+
+            <a href="/monitor" class="refresh">
+                Refresh Monitoring
+            </a>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- HIGH RISK TRANSACTIONS -->
+        <!-- ================================================= -->
+
+        <div class="card warning">
+
+            <h2>
+                Highest-Risk Transactions
+            </h2>
+
+            <p>
+                Showing the 20 transactions with the highest
+                RiskGuard risk scores.
+            </p>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Transaction ID
+                            </th>
+
+                            <th>
+                                Customer ID
+                            </th>
+
+                            <th>
+                                Fraud Probability
+                            </th>
+
+                            <th>
+                                Risk Score
+                            </th>
+
+                            <th>
+                                Risk Level
+                            </th>
+
+                            <th>
+                                Recommended Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for result in results %}
+
+                        <tr>
+
+
+                            <td>
+                                {{ result.transaction_id }}
+                            </td>
+
+
+                            <td>
+                                {{ result.customer_id }}
+                            </td>
+
+
+                            <td>
+                                {{ result.fraud_probability }}%
+                            </td>
+
+
+                            <td>
+                                {{ result.risk_score }}/100
+                            </td>
+
+
+                            <td>
+
+
+                                {% if result.risk_level == "LOW" %}
+
+                                <span class="badge badge-low">
+                                    LOW
+                                </span>
+
+
+                                {% elif result.risk_level == "MEDIUM" %}
+
+                                <span class="badge badge-medium">
+                                    MEDIUM
+                                </span>
+
+
+                                {% else %}
+
+                                <span class="badge badge-high">
+                                    HIGH
+                                </span>
+
+                                {% endif %}
+
+
+                            </td>
+
+
+                            <td>
+
+                                {{ result.recommended_action }}
+
+                            </td>
+
+
+                        </tr>
+
+                        {% else %}
+
+
+                        <tr>
+
+                            <td colspan="6" style="text-align:center;">
+
+                                No transactions available.
+
+                            </td>
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</body>
+
+</html>

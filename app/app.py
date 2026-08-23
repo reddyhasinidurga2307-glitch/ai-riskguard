@@ -1,11 +1,14 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import joblib
 import pandas as pd
 
 from app.services.risk_engine import calculate_risk_score
 from app.services.evidence import generate_evidence
 from app.agents.risk_agent import build_investigation
-
+from app.services.transaction_monitor import (
+    monitor_transactions,
+    generate_monitoring_summary
+)
 app = Flask(__name__)
 
 
@@ -21,7 +24,30 @@ model = joblib.load(MODEL_PATH)
 # --------------------------------------------------
 # Home page
 # --------------------------------------------------
+@app.route("/monitor")
+def monitor():
 
+    # Process all transactions
+    results = monitor_transactions()
+
+    # Generate dashboard statistics
+    summary = generate_monitoring_summary(results)
+
+    # Sort highest-risk transactions first
+    results = sorted(
+        results,
+        key=lambda x: x["risk_score"],
+        reverse=True
+    )
+
+    # Show only the top 20 highest-risk transactions
+    results = results[:20]
+
+    return render_template(
+        "monitor.html",
+        results=results,
+        summary=summary
+    )
 @app.route("/", methods=["GET", "POST"])
 def home():
 
