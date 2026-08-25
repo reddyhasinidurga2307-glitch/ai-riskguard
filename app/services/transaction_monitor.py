@@ -210,7 +210,34 @@ def monitor_transactions(limit=None):
 
     return results
 
+# --------------------------------------------------
+# Process transactions in batches
+# --------------------------------------------------
 
+def monitor_transaction_batch(
+    batch_size=100,
+    start_index=0
+):
+
+    df = pd.read_csv(DATA_PATH)
+
+    end_index = start_index + batch_size
+
+    batch = df.iloc[
+        start_index:end_index
+    ]
+
+    results = []
+
+    for _, transaction in batch.iterrows():
+
+        result = process_transaction(
+            transaction
+        )
+
+        results.append(result)
+
+    return results
 # --------------------------------------------------
 # Generate dashboard statistics
 # --------------------------------------------------

@@ -1,560 +1,853 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AI RiskGuard - Monitoring</title>
+    <title>AI RiskGuard | Monitoring Dashboard</title>
 
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             background: #f4f7fb;
             color: #1f2937;
+            min-height: 100vh;
         }
-
-        /* ---------------- HEADER ---------------- */
 
         .header {
             background: #111827;
             color: white;
-            padding: 28px 40px;
+            padding: 24px 40px;
         }
 
         .header h1 {
-            margin: 0;
-            font-size: 30px;
+            font-size: 28px;
+            margin-bottom: 6px;
         }
 
         .header p {
-            margin: 7px 0 0;
             color: #cbd5e1;
+            font-size: 14px;
         }
-
-
-        /* ---------------- CONTAINER ---------------- */
 
         .container {
+            width: 92%;
             max-width: 1400px;
             margin: 30px auto;
-            padding: 0 20px;
         }
 
-
-        /* ---------------- SUMMARY CARDS ---------------- */
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 18px;
-
-            margin-bottom: 25px;
+        .section-title {
+            margin-bottom: 18px;
         }
 
-        .summary-card {
-            background: white;
-
-            border-radius: 12px;
-
-            padding: 22px;
-
-            box-shadow:
-                0 4px 15px rgba(0, 0, 0, 0.08);
+        .section-title h2 {
+            font-size: 22px;
+            margin-bottom: 5px;
         }
 
-        .summary-card h3 {
-            margin: 0;
-
-            font-size: 15px;
-
+        .section-title p {
             color: #64748b;
+            font-size: 14px;
         }
 
-        .summary-number {
-            margin-top: 10px;
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            margin-bottom: 30px;
+        }
 
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .card-title {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .card-value {
             font-size: 30px;
-
             font-weight: bold;
         }
-
-
-        /* ---------------- RISK COLORS ---------------- */
 
         .low {
-            color: #15803d;
-
-            font-weight: bold;
+            color: #16a34a;
         }
 
         .medium {
-            color: #ca8a04;
-
-            font-weight: bold;
+            color: #d97706;
         }
 
         .high {
             color: #dc2626;
+        }
 
+        .danger {
+            color: #b91c1c;
+        }
+
+        .progress-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 20px;
+        }
+
+        .progress-header h2 {
+            font-size: 20px;
+        }
+
+        .progress-number {
+            font-size: 22px;
             font-weight: bold;
         }
 
-
-        /* ---------------- CARD ---------------- */
-
-        .card {
-            background: white;
-
-            border-radius: 12px;
-
-            padding: 24px;
-
-            margin-bottom: 25px;
-
-            box-shadow:
-                0 4px 15px rgba(0, 0, 0, 0.08);
+        .progress-bar {
+            width: 100%;
+            height: 18px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
         }
 
-        .card h2 {
-            margin-top: 0;
-        }
-
-
-        /* ---------------- BUTTON ---------------- */
-
-        .refresh {
-            display: inline-block;
-
-            margin-top: 10px;
-
-            padding: 11px 20px;
-
+        .progress-fill {
+            height: 100%;
+            width: {{ summary.progress }}%;
             background: #2563eb;
+            border-radius: 20px;
+            transition: width 0.4s ease;
+        }
 
-            color: white;
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            color: #64748b;
+            font-size: 14px;
+        }
 
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 18px;
+            border-radius: 8px;
             text-decoration: none;
-
-            border-radius: 7px;
+            font-weight: bold;
+            font-size: 14px;
+            background: #2563eb;
+            color: white;
         }
 
-        .refresh:hover {
-            background: #1d4ed8;
+        .button.secondary {
+            background: #475569;
         }
 
+        .button.disabled {
+            background: #94a3b8;
+            pointer-events: none;
+        }
 
-        /* ---------------- TABLE ---------------- */
+        .analytics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
 
-        .table-container {
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .panel h2 {
+            font-size: 19px;
+            margin-bottom: 20px;
+        }
+
+        .risk-row {
+            margin-bottom: 18px;
+        }
+
+        .risk-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .risk-bar {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .risk-fill-low {
+            height: 100%;
+            width: {% if summary.total_transactions > 0 %}{{ (summary.low_risk / summary.total_transactions * 100) }}%{% else %}0%{% endif %};
+            background: #16a34a;
+        }
+
+        .risk-fill-medium {
+            height: 100%;
+            width: {% if summary.total_transactions > 0 %}{{ (summary.medium_risk / summary.total_transactions * 100) }}%{% else %}0%{% endif %};
+            background: #d97706;
+        }
+
+        .risk-fill-high {
+            height: 100%;
+            width: {% if summary.total_transactions > 0 %}{{ (summary.high_risk / summary.total_transactions * 100) }}%{% else %}0%{% endif %};
+            background: #dc2626;
+        }
+
+        .fraud-box {
+            text-align: center;
+            padding: 25px;
+            border-radius: 10px;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+        }
+
+        .fraud-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #dc2626;
+            margin-bottom: 8px;
+        }
+
+        .fraud-box p {
+            color: #64748b;
+        }
+
+        .search-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .search-controls input,
+        .search-controls select {
+            padding: 11px 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-controls input {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .table-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 25px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table-header h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .table-header p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .table-wrapper {
             overflow-x: auto;
         }
 
         table {
             width: 100%;
-
             border-collapse: collapse;
-        }
-
-        th,
-        td {
-            padding: 14px;
-
-            text-align: left;
-
-            border-bottom:
-                1px solid #e5e7eb;
+            min-width: 900px;
         }
 
         th {
             background: #f8fafc;
-
-            font-size: 14px;
+            color: #475569;
+            text-align: left;
+            padding: 15px;
+            font-size: 13px;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         td {
+            padding: 15px;
+            border-bottom: 1px solid #f1f5f9;
             font-size: 14px;
         }
 
+        tr:hover {
+            background: #f8fafc;
+        }
 
-        /* ---------------- RISK BADGES ---------------- */
+        .transaction-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .transaction-link:hover {
+            text-decoration: underline;
+        }
 
         .badge {
             display: inline-block;
-
             padding: 5px 10px;
-
             border-radius: 20px;
-
             font-size: 12px;
-
             font-weight: bold;
         }
 
         .badge-low {
             background: #dcfce7;
-
             color: #166534;
         }
 
         .badge-medium {
             background: #fef3c7;
-
             color: #92400e;
         }
 
         .badge-high {
             background: #fee2e2;
-
             color: #991b1b;
         }
 
-
-        /* ---------------- HIGH RISK SECTION ---------------- */
-
-        .warning {
-            border-left:
-                5px solid #dc2626;
+        .action-text {
+            font-size: 12px;
+            font-weight: bold;
+            color: #475569;
         }
 
+        .empty-state {
+            text-align: center;
+            padding: 45px;
+            color: #64748b;
+        }
 
-        /* ---------------- RESPONSIVE ---------------- */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
 
-        @media (max-width: 900px) {
-
-            .summary-grid {
-                grid-template-columns:
-                    repeat(2, 1fr);
+        @media (max-width: 1100px) {
+            .cards {
+                grid-template-columns: repeat(3, 1fr);
             }
-
         }
 
-
-        @media (max-width: 600px) {
-
-            .summary-grid {
-                grid-template-columns: 1fr;
+        @media (max-width: 750px) {
+            .container {
+                width: 94%;
             }
 
             .header {
-                padding: 22px;
+                padding: 20px;
             }
 
-            .container {
-                padding: 0 12px;
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
             }
 
+            .analytics {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
-
 </head>
-
 
 <body>
 
+<header class="header">
+    <h1>AI RiskGuard</h1>
+    <p>Automatic Transaction Risk Monitoring & Investigation System</p>
+</header>
 
-    <!-- ================================================= -->
-    <!-- HEADER -->
-    <!-- ================================================= -->
+<main class="container">
 
-    <div class="header">
+    <!-- Dashboard Summary -->
 
-        <h1>
-            AI RiskGuard
-        </h1>
-
-        <p>
-            Automatic Transaction Risk Monitoring
-        </p>
-
+    <div class="section-title">
+        <h2>Risk Monitoring Dashboard</h2>
+        <p>Real-time overview of transactions analyzed by RiskGuard.</p>
     </div>
 
+    <section class="cards">
 
-    <div class="container">
+        <div class="card">
+            <div class="card-title">Transactions Analyzed</div>
+            <div class="card-value">
+                {{ summary.total_transactions }}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Low Risk</div>
+            <div class="card-value low">
+                {{ summary.low_risk }}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Medium Risk</div>
+            <div class="card-value medium">
+                {{ summary.medium_risk }}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">High Risk</div>
+            <div class="card-value high">
+                {{ summary.high_risk }}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Fraud Probability ≥ 50%</div>
+            <div class="card-value danger">
+                {{ summary.fraud_detected }}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Escalations</div>
+            <div class="card-value danger">
+                {{ summary.escalation_count }}
+            </div>
+        </div>
+
+    </section>
 
 
-        <!-- ================================================= -->
-        <!-- SUMMARY -->
-        <!-- ================================================= -->
+    <!-- Monitoring Progress -->
 
-        <div class="summary-grid">
+    <section class="progress-section">
 
+        <div class="progress-header">
 
-            <div class="summary-card">
+            <div>
+                <h2>Automatic Transaction Monitoring</h2>
 
-                <h3>
-                    Total Transactions
-                </h3>
-
-                <div class="summary-number">
-
-                    {{ summary.total_transactions }}
-
-                </div>
-
+                <p style="margin-top: 7px; color: #64748b;">
+                    RiskGuard processes transactions automatically in batches.
+                </p>
             </div>
 
-
-            <div class="summary-card">
-
-                <h3>
-                    Low Risk
-                </h3>
-
-                <div class="summary-number low">
-
-                    {{ summary.low_risk }}
-
-                </div>
-
+            <div class="progress-number">
+                {{ summary.progress }}%
             </div>
-
-
-            <div class="summary-card">
-
-                <h3>
-                    Medium Risk
-                </h3>
-
-                <div class="summary-number medium">
-
-                    {{ summary.medium_risk }}
-
-                </div>
-
-            </div>
-
-
-            <div class="summary-card">
-
-                <h3>
-                    High Risk
-                </h3>
-
-                <div class="summary-number high">
-
-                    {{ summary.high_risk }}
-
-                </div>
-
-            </div>
-
-
-            <div class="summary-card">
-
-                <h3>
-                    Fraud Probability ≥ 50%
-                </h3>
-
-                <div class="summary-number">
-
-                    {{ summary.fraud_detected }}
-
-                </div>
-
-            </div>
-
-
-            <div class="summary-card">
-
-                <h3>
-                    Escalations
-                </h3>
-
-                <div class="summary-number high">
-
-                    {{ summary.escalation_count }}
-
-                </div>
-
-            </div>
-
 
         </div>
 
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
 
-        <!-- ================================================= -->
-        <!-- MONITORING INFORMATION -->
-        <!-- ================================================= -->
+        <div class="progress-info">
+            <span>
+                {{ summary.processed_count }}
+                transactions analyzed
+            </span>
 
-        <div class="card">
+            <span>
+                {{ summary.total_available }}
+                total transactions
+            </span>
+        </div>
 
-            <h2>
-                Automatic Transaction Monitoring
-            </h2>
+        <div class="actions">
 
-            <p>
-                RiskGuard analyzed transactions automatically
-                using the machine learning model, risk engine,
-                evidence generator, and investigation agent.
-            </p>
+            {% if summary.processed_count < summary.total_available %}
 
-            <a href="/monitor" class="refresh">
-                Refresh Monitoring
+                <a href="/process-batch" class="button">
+                    Process Next 100 Transactions
+                </a>
+
+            {% else %}
+
+                <span class="button disabled">
+                    All Transactions Processed
+                </span>
+
+            {% endif %}
+
+            <a href="/monitor" class="button secondary">
+                Refresh Dashboard
             </a>
 
         </div>
 
+    </section>
 
-        <!-- ================================================= -->
-        <!-- HIGH RISK TRANSACTIONS -->
-        <!-- ================================================= -->
 
-        <div class="card warning">
+    <!-- Analytics -->
 
-            <h2>
-                Highest-Risk Transactions
-            </h2>
+    <section class="analytics">
+
+        <div class="panel">
+
+            <h2>Risk Distribution</h2>
+
+            <div class="risk-row">
+
+                <div class="risk-label">
+                    <span>LOW</span>
+                    <span>{{ summary.low_risk }}</span>
+                </div>
+
+                <div class="risk-bar">
+                    <div class="risk-fill-low"></div>
+                </div>
+
+            </div>
+
+
+            <div class="risk-row">
+
+                <div class="risk-label">
+                    <span>MEDIUM</span>
+                    <span>{{ summary.medium_risk }}</span>
+                </div>
+
+                <div class="risk-bar">
+                    <div class="risk-fill-medium"></div>
+                </div>
+
+            </div>
+
+
+            <div class="risk-row">
+
+                <div class="risk-label">
+                    <span>HIGH</span>
+                    <span>{{ summary.high_risk }}</span>
+                </div>
+
+                <div class="risk-bar">
+                    <div class="risk-fill-high"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>Fraud Risk Indicator</h2>
+
+            <div class="fraud-box">
+
+                <div class="fraud-number">
+                    {{ summary.fraud_detected }}
+                </div>
+
+                <p>
+                    transactions detected with
+                    ML fraud probability ≥ 50%
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Search and Filters -->
+
+    <section class="search-panel">
+
+        <h2>Transaction Search & Filters</h2>
+
+        <p style="margin-top: 6px; color: #64748b; font-size: 14px;">
+            Search the currently analyzed transactions by Transaction ID
+            or Customer ID and filter by risk level.
+        </p>
+
+        <div class="search-controls">
+
+            <input
+                type="text"
+                id="transactionSearch"
+                placeholder="Search Transaction ID or Customer ID..."
+                onkeyup="filterTransactions()"
+            >
+
+            <select
+                id="riskFilter"
+                onchange="filterTransactions()"
+            >
+                <option value="ALL">All Risk Levels</option>
+                <option value="LOW">Low Risk</option>
+                <option value="MEDIUM">Medium Risk</option>
+                <option value="HIGH">High Risk</option>
+            </select>
+
+        </div>
+
+    </section>
+
+
+    <!-- Transaction Table -->
+
+    <section class="table-panel">
+
+        <div class="table-header">
+
+            <h2>Highest-Risk Transactions</h2>
 
             <p>
                 Showing the 20 transactions with the highest
                 RiskGuard risk scores.
             </p>
 
+            <p id="tableCount" style="margin-top: 8px;">
+                Showing <strong>20</strong> transactions in the current table.
+            </p>
 
-            <div class="table-container">
+        </div>
 
-                <table>
+        <div class="table-wrapper">
 
-                    <thead>
+            <table id="transactionTable">
 
-                        <tr>
+                <thead>
 
-                            <th>
-                                Transaction ID
-                            </th>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Customer ID</th>
+                        <th>Fraud Probability</th>
+                        <th>Risk Score</th>
+                        <th>Risk Level</th>
+                        <th>Recommended Action</th>
+                    </tr>
 
-                            <th>
-                                Customer ID
-                            </th>
+                </thead>
 
-                            <th>
-                                Fraud Probability
-                            </th>
+                <tbody>
 
-                            <th>
-                                Risk Score
-                            </th>
+                    {% for transaction in results %}
 
-                            <th>
-                                Risk Level
-                            </th>
+                    <tr
+                        data-transaction="{{ transaction.transaction_id | lower }}"
+                        data-customer="{{ transaction.customer_id | lower }}"
+                        data-risk="{{ transaction.risk_level }}"
+                    >
 
-                            <th>
-                                Recommended Action
-                            </th>
+                        <td>
+                            <a
+                                class="transaction-link"
+                                href="/investigate/{{ transaction.transaction_id }}"
+                            >
+                                {{ transaction.transaction_id }}
+                            </a>
+                        </td>
 
-                        </tr>
+                        <td>
+                            {{ transaction.customer_id }}
+                        </td>
 
-                    </thead>
+                        <td>
+                            {{ transaction.fraud_probability }}%
+                        </td>
 
+                        <td>
+                            {{ transaction.risk_score }}/100
+                        </td>
 
-                    <tbody>
+                        <td>
 
-
-                        {% for result in results %}
-
-                        <tr>
-
-
-                            <td>
-                                <a href="/investigate/{{ result.transaction_id }}">
-                                    {{ result.transaction_id }}
-                                </a>
-                            </td>
-
-
-                            <td>
-                                {{ result.customer_id }}
-                            </td>
-
-
-                            <td>
-                                {{ result.fraud_probability }}%
-                            </td>
-
-
-                            <td>
-                                {{ result.risk_score }}/100
-                            </td>
-
-
-                            <td>
-
-
-                                {% if result.risk_level == "LOW" %}
+                            {% if transaction.risk_level == "LOW" %}
 
                                 <span class="badge badge-low">
                                     LOW
                                 </span>
 
-
-                                {% elif result.risk_level == "MEDIUM" %}
+                            {% elif transaction.risk_level == "MEDIUM" %}
 
                                 <span class="badge badge-medium">
                                     MEDIUM
                                 </span>
 
-
-                                {% else %}
+                            {% else %}
 
                                 <span class="badge badge-high">
                                     HIGH
                                 </span>
 
-                                {% endif %}
+                            {% endif %}
 
+                        </td>
 
-                            </td>
+                        <td>
+                            <span class="action-text">
+                                {{ transaction.recommended_action }}
+                            </span>
+                        </td>
 
+                    </tr>
 
-                            <td>
+                    {% else %}
 
-                                {{ result.recommended_action }}
+                    <tr>
+                        <td colspan="6">
 
-                            </td>
-
-
-                        </tr>
-
-                        {% else %}
-
-
-                        <tr>
-
-                            <td colspan="6" style="text-align:center;">
-
+                            <div class="empty-state">
                                 No transactions available.
+                            </div>
 
-                            </td>
+                        </td>
+                    </tr>
 
-                        </tr>
+                    {% endfor %}
 
+                </tbody>
 
-                        {% endfor %}
-
-
-                    </tbody>
-
-                </table>
-
-            </div>
+            </table>
 
         </div>
 
+    </section>
 
-    </div>
+</main>
 
+
+<footer class="footer">
+    AI RiskGuard • Machine Learning Based Transaction Risk Monitoring
+</footer>
+
+
+<script>
+
+function filterTransactions() {
+
+    const searchInput =
+        document.getElementById("transactionSearch");
+
+    const riskFilter =
+        document.getElementById("riskFilter");
+
+    const search =
+        searchInput.value.toLowerCase().trim();
+
+    const selectedRisk =
+        riskFilter.value;
+
+    const rows =
+        document.querySelectorAll(
+            "#transactionTable tbody tr"
+        );
+
+    let visibleCount = 0;
+
+    rows.forEach(function(row) {
+
+        const transaction =
+            row.dataset.transaction || "";
+
+        const customer =
+            row.dataset.customer || "";
+
+        const risk =
+            row.dataset.risk || "";
+
+        const matchesSearch =
+            transaction.includes(search) ||
+            customer.includes(search);
+
+        const matchesRisk =
+            selectedRisk === "ALL" ||
+            risk === selectedRisk;
+
+        if (
+            matchesSearch &&
+            matchesRisk
+        ) {
+
+            row.style.display = "";
+            visibleCount++;
+
+        } else {
+
+            row.style.display = "none";
+
+        }
+
+    });
+
+    document.getElementById("tableCount").innerHTML =
+        "Showing <strong>" +
+        visibleCount +
+        "</strong> transactions in the current table.";
+
+}
+
+</script>
 
 </body>
-
 </html>
