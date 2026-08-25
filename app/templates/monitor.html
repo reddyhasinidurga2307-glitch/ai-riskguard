@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -133,7 +134,7 @@
 
         .progress-fill {
             height: 100%;
-            width: {{ summary.progress }}%;
+            width: 0%;
             background: #2563eb;
             border-radius: 20px;
             transition: width 0.4s ease;
@@ -214,21 +215,22 @@
             overflow: hidden;
         }
 
-        .risk-fill-low {
+        .risk-fill-low,
+        .risk-fill-medium,
+        .risk-fill-high {
             height: 100%;
-            width: {% if summary.total_transactions > 0 %}{{ (summary.low_risk / summary.total_transactions * 100) }}%{% else %}0%{% endif %};
+            width: 0%;
+        }
+
+        .risk-fill-low {
             background: #16a34a;
         }
 
         .risk-fill-medium {
-            height: 100%;
-            width: {% if summary.total_transactions > 0 %}{{ (summary.medium_risk / summary.total_transactions * 100) }}%{% else %}0%{% endif %};
             background: #d97706;
         }
 
         .risk-fill-high {
-            height: 100%;
-            width: {% if summary.total_transactions > 0 %}{{ (summary.high_risk / summary.total_transactions * 100) }}%{% else %}0%{% endif %};
             background: #dc2626;
         }
 
@@ -422,432 +424,483 @@
 
 <body>
 
-<header class="header">
-    <h1>AI RiskGuard</h1>
-    <p>Automatic Transaction Risk Monitoring & Investigation System</p>
-</header>
+    <header class="header">
+        <h1>AI RiskGuard</h1>
+        <p>Automatic Transaction Risk Monitoring &amp; Investigation System</p>
+    </header>
 
-<main class="container">
+    <main class="container">
 
-    <!-- Dashboard Summary -->
-
-    <div class="section-title">
-        <h2>Risk Monitoring Dashboard</h2>
-        <p>Real-time overview of transactions analyzed by RiskGuard.</p>
-    </div>
-
-    <section class="cards">
-
-        <div class="card">
-            <div class="card-title">Transactions Analyzed</div>
-            <div class="card-value">
-                {{ summary.total_transactions }}
-            </div>
+        <div class="section-title">
+            <h2>Risk Monitoring Dashboard</h2>
+            <p>Real-time overview of transactions analyzed by RiskGuard.</p>
         </div>
 
-        <div class="card">
-            <div class="card-title">Low Risk</div>
-            <div class="card-value low">
-                {{ summary.low_risk }}
-            </div>
-        </div>
+        <section class="cards">
 
-        <div class="card">
-            <div class="card-title">Medium Risk</div>
-            <div class="card-value medium">
-                {{ summary.medium_risk }}
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">High Risk</div>
-            <div class="card-value high">
-                {{ summary.high_risk }}
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Fraud Probability ≥ 50%</div>
-            <div class="card-value danger">
-                {{ summary.fraud_detected }}
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Escalations</div>
-            <div class="card-value danger">
-                {{ summary.escalation_count }}
-            </div>
-        </div>
-
-    </section>
-
-
-    <!-- Monitoring Progress -->
-
-    <section class="progress-section">
-
-        <div class="progress-header">
-
-            <div>
-                <h2>Automatic Transaction Monitoring</h2>
-
-                <p style="margin-top: 7px; color: #64748b;">
-                    RiskGuard processes transactions automatically in batches.
-                </p>
-            </div>
-
-            <div class="progress-number">
-                {{ summary.progress }}%
-            </div>
-
-        </div>
-
-        <div class="progress-bar">
-            <div class="progress-fill"></div>
-        </div>
-
-        <div class="progress-info">
-            <span>
-                {{ summary.processed_count }}
-                transactions analyzed
-            </span>
-
-            <span>
-                {{ summary.total_available }}
-                total transactions
-            </span>
-        </div>
-
-        <div class="actions">
-
-            {% if summary.processed_count < summary.total_available %}
-
-                <a href="/process-batch" class="button">
-                    Process Next 100 Transactions
-                </a>
-
-            {% else %}
-
-                <span class="button disabled">
-                    All Transactions Processed
-                </span>
-
-            {% endif %}
-
-            <a href="/monitor" class="button secondary">
-                Refresh Dashboard
-            </a>
-
-        </div>
-
-    </section>
-
-
-    <!-- Analytics -->
-
-    <section class="analytics">
-
-        <div class="panel">
-
-            <h2>Risk Distribution</h2>
-
-            <div class="risk-row">
-
-                <div class="risk-label">
-                    <span>LOW</span>
-                    <span>{{ summary.low_risk }}</span>
+            <div class="card">
+                <div class="card-title">Transactions Analyzed</div>
+                <div class="card-value">
+                    {{ summary.total_transactions }}
                 </div>
-
-                <div class="risk-bar">
-                    <div class="risk-fill-low"></div>
-                </div>
-
             </div>
 
-
-            <div class="risk-row">
-
-                <div class="risk-label">
-                    <span>MEDIUM</span>
-                    <span>{{ summary.medium_risk }}</span>
+            <div class="card">
+                <div class="card-title">Low Risk</div>
+                <div class="card-value low">
+                    {{ summary.low_risk }}
                 </div>
-
-                <div class="risk-bar">
-                    <div class="risk-fill-medium"></div>
-                </div>
-
             </div>
 
-
-            <div class="risk-row">
-
-                <div class="risk-label">
-                    <span>HIGH</span>
-                    <span>{{ summary.high_risk }}</span>
+            <div class="card">
+                <div class="card-title">Medium Risk</div>
+                <div class="card-value medium">
+                    {{ summary.medium_risk }}
                 </div>
-
-                <div class="risk-bar">
-                    <div class="risk-fill-high"></div>
-                </div>
-
             </div>
 
-        </div>
+            <div class="card">
+                <div class="card-title">High Risk</div>
+                <div class="card-value high">
+                    {{ summary.high_risk }}
+                </div>
+            </div>
 
-
-        <div class="panel">
-
-            <h2>Fraud Risk Indicator</h2>
-
-            <div class="fraud-box">
-
-                <div class="fraud-number">
+            <div class="card">
+                <div class="card-title">Fraud Probability &gt;= 50%</div>
+                <div class="card-value danger">
                     {{ summary.fraud_detected }}
                 </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Escalations</div>
+                <div class="card-value danger">
+                    {{ summary.escalation_count }}
+                </div>
+            </div>
+
+        </section>
+
+
+        <section class="progress-section">
+
+            <div class="progress-header">
+
+                <div>
+                    <h2>Automatic Transaction Monitoring</h2>
+
+                    <p style="margin-top: 7px; color: #64748b;">
+                        RiskGuard processes transactions automatically in batches.
+                    </p>
+                </div>
+
+                <div class="progress-number">
+                    {{ summary.progress }}%
+                </div>
+
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" data-progress="{{ summary.progress }}">
+                </div>
+            </div>
+
+            <div class="progress-info">
+
+                <span>
+                    {{ summary.processed_count }}
+                    transactions analyzed
+                </span>
+
+                <span>
+                    {{ summary.total_available }}
+                    total transactions
+                </span>
+
+            </div>
+
+            <div class="actions">
+
+                {% if summary.processed_count < summary.total_available %} <a href="/process-batch" class="button">
+                    Process Next 100 Transactions
+                    </a>
+
+                    {% else %}
+
+                    <span class="button disabled">
+                        All Transactions Processed
+                    </span>
+
+                    {% endif %}
+
+                    <a href="/monitor" class="button secondary">
+                        Refresh Dashboard
+                    </a>
+
+            </div>
+
+        </section>
+
+
+        <section class="analytics">
+
+            <div class="panel">
+
+                <h2>Risk Distribution</h2>
+
+                <div class="risk-row">
+
+                    <div class="risk-label">
+                        <span>LOW</span>
+                        <span>{{ summary.low_risk }}</span>
+                    </div>
+
+                    <div class="risk-bar">
+                        <div class="risk-fill-low" data-risk-value="{{ summary.low_risk }}"
+                            data-total-value="{{ summary.total_transactions }}">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="risk-row">
+
+                    <div class="risk-label">
+                        <span>MEDIUM</span>
+                        <span>{{ summary.medium_risk }}</span>
+                    </div>
+
+                    <div class="risk-bar">
+                        <div class="risk-fill-medium" data-risk-value="{{ summary.medium_risk }}"
+                            data-total-value="{{ summary.total_transactions }}">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="risk-row">
+
+                    <div class="risk-label">
+                        <span>HIGH</span>
+                        <span>{{ summary.high_risk }}</span>
+                    </div>
+
+                    <div class="risk-bar">
+                        <div class="risk-fill-high" data-risk-value="{{ summary.high_risk }}"
+                            data-total-value="{{ summary.total_transactions }}">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>Fraud Risk Indicator</h2>
+
+                <div class="fraud-box">
+
+                    <div class="fraud-number">
+                        {{ summary.fraud_detected }}
+                    </div>
+
+                    <p>
+                        transactions detected with
+                        ML fraud probability &gt;= 50%
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="search-panel">
+
+            <h2>Transaction Search &amp; Filters</h2>
+
+            <p style="margin-top: 6px; color: #64748b; font-size: 14px;">
+                Search the currently analyzed transactions by Transaction ID
+                or Customer ID and filter by risk level.
+            </p>
+
+            <div class="search-controls">
+
+                <input type="text" id="transactionSearch" placeholder="Search Transaction ID or Customer ID..."
+                    onkeyup="filterTransactions()">
+
+                <select id="riskFilter" onchange="filterTransactions()">
+                    <option value="ALL">All Risk Levels</option>
+                    <option value="LOW">Low Risk</option>
+                    <option value="MEDIUM">Medium Risk</option>
+                    <option value="HIGH">High Risk</option>
+                </select>
+
+            </div>
+
+        </section>
+
+
+        <section class="table-panel">
+
+            <div class="table-header">
+
+                <h2>Highest-Risk Transactions</h2>
 
                 <p>
-                    transactions detected with
-                    ML fraud probability ≥ 50%
+                    Showing the 20 transactions with the highest
+                    RiskGuard risk scores.
+                </p>
+
+                <p id="tableCount" style="margin-top: 8px;">
+                    Showing <strong>20</strong> transactions in the current table.
                 </p>
 
             </div>
 
-        </div>
 
-    </section>
+            <div class="table-wrapper">
 
+                <table id="transactionTable">
 
-    <!-- Search and Filters -->
+                    <thead>
 
-    <section class="search-panel">
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Customer ID</th>
+                            <th>Fraud Probability</th>
+                            <th>Risk Score</th>
+                            <th>Risk Level</th>
+                            <th>Recommended Action</th>
+                        </tr>
 
-        <h2>Transaction Search & Filters</h2>
-
-        <p style="margin-top: 6px; color: #64748b; font-size: 14px;">
-            Search the currently analyzed transactions by Transaction ID
-            or Customer ID and filter by risk level.
-        </p>
-
-        <div class="search-controls">
-
-            <input
-                type="text"
-                id="transactionSearch"
-                placeholder="Search Transaction ID or Customer ID..."
-                onkeyup="filterTransactions()"
-            >
-
-            <select
-                id="riskFilter"
-                onchange="filterTransactions()"
-            >
-                <option value="ALL">All Risk Levels</option>
-                <option value="LOW">Low Risk</option>
-                <option value="MEDIUM">Medium Risk</option>
-                <option value="HIGH">High Risk</option>
-            </select>
-
-        </div>
-
-    </section>
+                    </thead>
 
 
-    <!-- Transaction Table -->
+                    <tbody>
 
-    <section class="table-panel">
+                        {% for transaction in results %}
 
-        <div class="table-header">
+                        <tr data-transaction="{{ transaction.transaction_id | lower }}"
+                            data-customer="{{ transaction.customer_id | lower }}"
+                            data-risk="{{ transaction.risk_level }}">
 
-            <h2>Highest-Risk Transactions</h2>
+                            <td>
 
-            <p>
-                Showing the 20 transactions with the highest
-                RiskGuard risk scores.
-            </p>
+                                <a class="transaction-link" href="/investigate/{{ transaction.transaction_id }}">
+                                    {{ transaction.transaction_id }}
+                                </a>
 
-            <p id="tableCount" style="margin-top: 8px;">
-                Showing <strong>20</strong> transactions in the current table.
-            </p>
+                            </td>
 
-        </div>
+                            <td>
+                                {{ transaction.customer_id }}
+                            </td>
 
-        <div class="table-wrapper">
+                            <td>
+                                {{ transaction.fraud_probability }}%
+                            </td>
 
-            <table id="transactionTable">
+                            <td>
+                                {{ transaction.risk_score }}/100
+                            </td>
 
-                <thead>
+                            <td>
 
-                    <tr>
-                        <th>Transaction ID</th>
-                        <th>Customer ID</th>
-                        <th>Fraud Probability</th>
-                        <th>Risk Score</th>
-                        <th>Risk Level</th>
-                        <th>Recommended Action</th>
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {% for transaction in results %}
-
-                    <tr
-                        data-transaction="{{ transaction.transaction_id | lower }}"
-                        data-customer="{{ transaction.customer_id | lower }}"
-                        data-risk="{{ transaction.risk_level }}"
-                    >
-
-                        <td>
-                            <a
-                                class="transaction-link"
-                                href="/investigate/{{ transaction.transaction_id }}"
-                            >
-                                {{ transaction.transaction_id }}
-                            </a>
-                        </td>
-
-                        <td>
-                            {{ transaction.customer_id }}
-                        </td>
-
-                        <td>
-                            {{ transaction.fraud_probability }}%
-                        </td>
-
-                        <td>
-                            {{ transaction.risk_score }}/100
-                        </td>
-
-                        <td>
-
-                            {% if transaction.risk_level == "LOW" %}
+                                {% if transaction.risk_level == "LOW" %}
 
                                 <span class="badge badge-low">
                                     LOW
                                 </span>
 
-                            {% elif transaction.risk_level == "MEDIUM" %}
+                                {% elif transaction.risk_level == "MEDIUM" %}
 
                                 <span class="badge badge-medium">
                                     MEDIUM
                                 </span>
 
-                            {% else %}
+                                {% else %}
 
                                 <span class="badge badge-high">
                                     HIGH
                                 </span>
 
-                            {% endif %}
+                                {% endif %}
 
-                        </td>
+                            </td>
 
-                        <td>
-                            <span class="action-text">
-                                {{ transaction.recommended_action }}
-                            </span>
-                        </td>
+                            <td>
+                                <span class="action-text">
+                                    {{ transaction.recommended_action }}
+                                </span>
+                            </td>
 
-                    </tr>
+                        </tr>
 
-                    {% else %}
+                        {% else %}
 
-                    <tr>
-                        <td colspan="6">
+                        <tr>
 
-                            <div class="empty-state">
-                                No transactions available.
-                            </div>
+                            <td colspan="6">
 
-                        </td>
-                    </tr>
+                                <div class="empty-state">
+                                    No transactions available.
+                                </div>
 
-                    {% endfor %}
+                            </td>
 
-                </tbody>
+                        </tr>
 
-            </table>
+                        {% endfor %}
 
-        </div>
+                    </tbody>
 
-    </section>
+                </table>
 
-</main>
+            </div>
 
+        </section>
 
-<footer class="footer">
-    AI RiskGuard • Machine Learning Based Transaction Risk Monitoring
-</footer>
+    </main>
 
 
-<script>
+    <footer class="footer">
+        AI RiskGuard &bull; Machine Learning Based Transaction Risk Monitoring
+    </footer>
 
-function filterTransactions() {
 
-    const searchInput =
-        document.getElementById("transactionSearch");
+    <script>
 
-    const riskFilter =
-        document.getElementById("riskFilter");
+        function setProgressBar() {
 
-    const search =
-        searchInput.value.toLowerCase().trim();
+            const progressFill =
+                document.querySelector(".progress-fill");
 
-    const selectedRisk =
-        riskFilter.value;
+            if (!progressFill) {
+                return;
+            }
 
-    const rows =
-        document.querySelectorAll(
-            "#transactionTable tbody tr"
-        );
+            const progress =
+                parseFloat(progressFill.dataset.progress) || 0;
 
-    let visibleCount = 0;
+            const safeProgress =
+                Math.max(0, Math.min(100, progress));
 
-    rows.forEach(function(row) {
-
-        const transaction =
-            row.dataset.transaction || "";
-
-        const customer =
-            row.dataset.customer || "";
-
-        const risk =
-            row.dataset.risk || "";
-
-        const matchesSearch =
-            transaction.includes(search) ||
-            customer.includes(search);
-
-        const matchesRisk =
-            selectedRisk === "ALL" ||
-            risk === selectedRisk;
-
-        if (
-            matchesSearch &&
-            matchesRisk
-        ) {
-
-            row.style.display = "";
-            visibleCount++;
-
-        } else {
-
-            row.style.display = "none";
-
+            progressFill.style.width =
+                safeProgress + "%";
         }
 
-    });
 
-    document.getElementById("tableCount").innerHTML =
-        "Showing <strong>" +
-        visibleCount +
-        "</strong> transactions in the current table.";
+        function setRiskBars() {
 
-}
+            const riskBars =
+                document.querySelectorAll(
+                    ".risk-fill-low, .risk-fill-medium, .risk-fill-high"
+                );
 
-</script>
+            riskBars.forEach(function (bar) {
+
+                const riskValue =
+                    parseFloat(bar.dataset.riskValue) || 0;
+
+                const totalValue =
+                    parseFloat(bar.dataset.totalValue) || 0;
+
+                let percentage = 0;
+
+                if (totalValue > 0) {
+                    percentage =
+                        (riskValue / totalValue) * 100;
+                }
+
+                const safePercentage =
+                    Math.max(0, Math.min(100, percentage));
+
+                bar.style.width =
+                    safePercentage + "%";
+            });
+        }
+
+
+        function filterTransactions() {
+
+            const searchInput =
+                document.getElementById("transactionSearch");
+
+            const riskFilter =
+                document.getElementById("riskFilter");
+
+            const search =
+                searchInput.value.toLowerCase().trim();
+
+            const selectedRisk =
+                riskFilter.value;
+
+            const rows =
+                document.querySelectorAll(
+                    "#transactionTable tbody tr"
+                );
+
+            let visibleCount = 0;
+
+            rows.forEach(function (row) {
+
+                const transaction =
+                    row.dataset.transaction || "";
+
+                const customer =
+                    row.dataset.customer || "";
+
+                const risk =
+                    row.dataset.risk || "";
+
+                const matchesSearch =
+                    transaction.includes(search) ||
+                    customer.includes(search);
+
+                const matchesRisk =
+                    selectedRisk === "ALL" ||
+                    risk === selectedRisk;
+
+                if (
+                    matchesSearch &&
+                    matchesRisk
+                ) {
+
+                    row.style.display = "";
+                    visibleCount++;
+
+                } else {
+
+                    row.style.display = "none";
+
+                }
+
+            });
+
+            document.getElementById("tableCount").innerHTML =
+                "Showing <strong>" +
+                visibleCount +
+                "</strong> transactions in the current table.";
+        }
+
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+                setProgressBar();
+                setRiskBars();
+            }
+        );
+
+    </script>
 
 </body>
+
 </html>
