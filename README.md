@@ -1,29 +1,37 @@
 # AI RiskGuard
 
-## Agentic Financial Transaction Risk Monitoring & Investigation System
+## Intelligent Transaction Risk Management & Investigation System
 
-AI RiskGuard is a machine-learning-powered financial risk intelligence and decision-support system designed to automatically analyze transactions, calculate risk, generate evidence, and support investigation decisions.
+AI RiskGuard is a machine-learning-powered financial transaction risk management system that analyzes transactions, estimates fraud probability, calculates an overall risk score, generates risk evidence, and supports investigation decisions through a unified monitoring workflow.
 
-The system combines **Machine Learning, a Risk Engine, Evidence Generation, and an Investigation Agent** into a unified transaction monitoring workflow.
+The system combines **Machine Learning, Risk Scoring, Evidence Generation, Transaction Monitoring, and Investigation** into one application.
 
 ---
 
-## Project Overview
+## Problem Statement
 
-Financial institutions need to identify potentially suspicious transactions quickly and consistently.
+Financial transaction systems need to identify potentially suspicious transactions quickly and consistently.
 
-AI RiskGuard addresses this by analyzing transaction data and producing:
+Manual transaction review can become difficult when the number of transactions increases. RiskGuard provides an automated decision-support workflow that helps identify higher-risk transactions and prioritize them for investigation.
+
+---
+
+## Solution
+
+AI RiskGuard analyzes transaction characteristics using a trained machine learning model and a dedicated risk engine.
+
+For each analyzed transaction, the system can produce:
 
 - ML-based fraud probability
-- A calculated risk score
+- Risk score out of 100
 - Risk classification
-- Evidence explaining potential risk factors
+- Risk evidence
 - Investigation summary
 - Recommended action
-- Automatic transaction monitoring
-- Batch-based transaction processing
+- Transaction monitoring information
+- Batch transaction processing
 - Risk monitoring dashboard
-- Transaction investigation pages
+- Transaction investigation details
 
 ---
 
@@ -33,7 +41,7 @@ AI RiskGuard addresses this by analyzing transaction data and producing:
 
 The trained machine learning model analyzes transaction characteristics and produces a fraud probability.
 
-The model considers features such as:
+The transaction features used by the system include:
 
 - Transaction amount
 - Transaction hour
@@ -48,11 +56,12 @@ The model considers features such as:
 
 ### 2. Risk Scoring Engine
 
-The ML fraud probability is combined with transaction-level risk factors by the Risk Engine.
+The ML fraud probability is combined with transaction-level risk factors through the Risk Engine.
 
 The system produces:
 
 ```text
+Fraud Probability
 Risk Score
 Risk Level
-Amount Deviation
+Risk Factors

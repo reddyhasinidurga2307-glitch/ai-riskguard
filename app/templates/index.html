@@ -335,6 +335,7 @@
 
         .probability-fill {
             height: 100%;
+            width: var(--fraud-probability);
             background: #dc2626;
             border-radius: 20px;
         }
@@ -816,102 +817,102 @@
 
                         <div class="probability-bar">
 
-                            <div class="probability-fill" <div
-    class="probability-fill"
-    style="width: {{ result.fraud_probability }}%;"
-></div></div>
+                            <div class="probability-fill" style="--fraud-probability: {{ result.fraud_probability }}%;">
+                            </div>
 
                         </div>
 
                     </div>
-
-
-                    <!-- Summary -->
-
-                    <div class="result-section">
-
-                        <div class="result-title">
-                            AI Investigation Summary
-                        </div>
-
-                        <div class="summary-box">
-                            {{ result.summary }}
-                        </div>
-
-                    </div>
-
-
-                    <!-- Evidence -->
-
-                    <div class="result-section">
-
-                        <div class="result-title">
-                            Risk Evidence
-                        </div>
-
-                        <ul class="evidence-list">
-
-                            {% for item in result.evidence %}
-
-                            <li>
-                                {{ item }}
-                            </li>
-
-                            {% else %}
-
-                            <li>
-                                No significant risk indicators detected.
-                            </li>
-
-                            {% endfor %}
-
-                        </ul>
-
-                    </div>
-
-
-                    <!-- Recommended Action -->
-
-                    <div class="result-section">
-
-                        <div class="action-box">
-
-                            <strong>
-                                Recommended Action
-                            </strong>
-
-                            {{ result.recommended_action }}
-
-                        </div>
-
-                    </div>
-
-
-                    {% else %}
-
-                    <div class="empty-result">
-
-                        <div class="empty-icon">
-                            RG
-                        </div>
-
-                        <h3>
-                            Awaiting Transaction
-                        </h3>
-
-                        <p>
-                            Enter the transaction details on the left
-                            and run the RiskGuard analysis to generate
-                            a machine-learning risk assessment.
-                        </p>
-
-                    </div>
-
-                    {% endif %}
 
                 </div>
 
-            </section>
+
+                <!-- Summary -->
+
+                <div class="result-section">
+
+                    <div class="result-title">
+                        AI Investigation Summary
+                    </div>
+
+                    <div class="summary-box">
+                        {{ result.summary }}
+                    </div>
+
+                </div>
+
+
+                <!-- Evidence -->
+
+                <div class="result-section">
+
+                    <div class="result-title">
+                        Risk Evidence
+                    </div>
+
+                    <ul class="evidence-list">
+
+                        {% for item in result.evidence %}
+
+                        <li>
+                            {{ item }}
+                        </li>
+
+                        {% else %}
+
+                        <li>
+                            No significant risk indicators detected.
+                        </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Recommended Action -->
+
+                <div class="result-section">
+
+                    <div class="action-box">
+
+                        <strong>
+                            Recommended Action
+                        </strong>
+
+                        {{ result.recommended_action }}
+
+                    </div>
+
+                </div>
+
+
+                {% else %}
+
+                <div class="empty-result">
+
+                    <div class="empty-icon">
+                        RG
+                    </div>
+
+                    <h3>
+                        Awaiting Transaction
+                    </h3>
+
+                    <p>
+                        Enter the transaction details on the left
+                        and run the RiskGuard analysis to generate
+                        a machine-learning risk assessment.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+        </div>
+
+        </section>
 
         </div>
 
