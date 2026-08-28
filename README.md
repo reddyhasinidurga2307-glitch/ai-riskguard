@@ -65,3 +65,90 @@ Fraud Probability
 Risk Score
 Risk Level
 Risk Factors
+```
+---
+
+## Installation & Running
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/reddyhasinidurga2307-glitch/ai-riskguard.git
+cd ai-riskguard
+```
+
+### 2. Create a virtual environment
+
+```bash
+python -m venv venv
+```
+
+Activate it:
+
+```bash
+.\venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Run the application
+
+```bash
+python -m app.app
+```
+
+The application will start at:
+
+```text
+http://127.0.0.1:5001
+```
+
+Open that address in your browser.
+
+---
+
+## System Workflow
+
+```text
+Transaction Data
+       |
+Machine Learning Model
+       |
+Fraud Probability
+       |
+Risk Scoring Engine
+       |
+Risk Score + Risk Level
+       |
+Risk Evidence
+       |
+Monitoring Dashboard
+       |
+Transaction Investigation
+       |
+Recommended Action
++```
+---
+
+## Intended Users
+
+AI RiskGuard is designed primarily for **financial risk analysts and fraud investigation teams**.
+
+The system helps analysts:
+
+- Monitor processed transactions
+- Identify high-risk transactions
+- Understand why a transaction was flagged
+- Investigate suspicious transactions
+- Prioritize transactions for review
+- Support risk-based decision making
+
+---
+
+## Important Note
+
+AI RiskGuard is a **decision-support system**. It assists analysts by identifying potentially risky transactions and providing supporting information. Final decisions remain with the responsible financial institution or analyst.
