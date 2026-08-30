@@ -10,3 +10,4 @@ pydantic
 pytest
 httpx
 flask
+gunicorn
